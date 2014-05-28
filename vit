@@ -1,0 +1,153 @@
+#!/usr/bin/env python
+
+from gi.repository import Gtk
+import pymol
+import threading
+
+
+class Handler:
+        def __init__(self):
+#               PDB file filter for dialogs
+
+                pdbfilter = Gtk.FileFilter()
+                pdbfilter.add_pattern('*.pdb')
+                builder.get_object('filechooserdialog1').set_filter(pdbfilter)
+
+#               FASTA file filter for dialogs
+                fastafilter = Gtk.FileFilter()
+                fastafilter.add_pattern('*.fasta')
+                fastafilter.add_pattern('*.txt')
+                builder.get_object('basic_fasta_file').set_filter(fastafilter)
+                builder.get_object('custom_fasta_file').set_filter(fastafilter)
+
+	def onDeleteWindow(self, *args):
+		Gtk.main_quit(*args)
+
+#       Window open/close instructions for PDB files
+
+	def open_dialog1(self, *args):
+		builder.get_object('filechooserdialog1').run()
+		builder.get_object('filechooserdialog1').hide()
+
+        def cancel_dialog1(self, *args):
+		builder.get_object('filechooserdialog1').hide()
+        
+        def close_warning_dialog1(self, *args):
+                builder.get_object('warning_dialog1').hide()		
+
+
+        def close_dialog1(self, *args):
+                builder.get_object('label41').set_text('\n\n            Cannot exceed 3 PDB files            \n')
+                filechooser = builder.get_object('filechooserdialog1')
+                filechooser.hide()
+                pdbs = filechooser.get_filenames()
+
+                if len(pdbs) > 3 :
+                        builder.get_object('warning_dialog1').show()  
+
+        	else:
+                        Vitamin().pdb_downloader(pdbs, 'files')  #download PDBs in PyMOL                      
+
+        def basic_pdb_downloader(self, *args):
+		code1 = builder.get_object('entry1').get_text()
+		code2 = builder.get_object('entry2').get_text()
+		code3 = builder.get_object('entry3').get_text()
+                pdbcode = [code1, code2, code3]
+                if code1 == '':
+                        builder.get_object('label41').set_text('\n\n            You must select 1 template at least          \n')
+                        builder.get_object('warning_dialog1').show()
+                else:
+                        while '' in pdbcode:
+                                pdbcode.remove('')
+	        	Vitamin().pdb_downloader(pdbcode, 'codes') #load files in PyMOL 
+
+
+
+
+
+	
+
+
+
+
+
+	def basic_FASTA_input(self, *args):
+		fasta = builder.get_object('basic_fasta_file').get_filename()
+                Vitamin().target_seg_file(fasta)
+
+
+
+
+
+	
+
+        def open_about(self, *args):
+		builder.get_object('aboutdialog1').run()
+		builder.get_object('aboutdialog1').hide()
+
+
+
+from time import sleep
+import imp
+
+class Vitamin:
+		
+	def pdb_downloader(self, pdbcode, origin): # PDB download and PyMOL integration
+                if origin == 'codes':
+                        for codes in pdbcode:
+	                        pymol.cmd.do('fetch %s' %codes)
+                        sleep(0.3)
+                        pymol.cmd.do('as cartoon')
+                        pymol.cmd.do('util.cbc')
+                elif origin == 'files':
+                        for codes in pdbcode:
+	                        pymol.cmd.do('load %s' %codes)
+                        sleep(0.3)
+                        pymol.cmd.do('as cartoon')
+                        pymol.cmd.do('util.cbc') #color by chain 
+                for pdb in pymol.cmd.get_names('all'):
+                        pymol.cmd.do('super %s, %s' %(pymol.cmd.get_names('all')[0],pdb)) #Retrive object names from pymol
+
+#                               
+#               Create seg files from PDB entries
+#     
+                sleep(1)
+                Readseq = imp.load_source('readseq','src/readseq.py')
+                for pdb in pdbcode:
+                        Readseq.readseq(pdb)
+                print 'Seg files from PDB created sucessfully'
+
+
+
+        def target_seg_file(self, input_file): #loads target FASTA file and converts it to seg file for modeller
+                fasta = open(input_file, 'r')
+                lines = []
+                seq = '>P1;target\nsequence:target::::::::\n'
+                for line in fasta:
+                        lines.append(line)
+                for line in lines:
+                        if '>' in lines[0]:
+                                if '>' not in line:
+                                        seq += line
+                        else:
+                                print 'Error'
+                                break
+                seq += '*'
+                if seq != '>P1;target\nsequence:target::::::::\n':
+                        output = open(input_file.split('.')[0].split('/')[-1]+'.seg', 'w')
+                        output.write(seq)
+
+                print "Seg file from FASTA created sucessfully!"
+
+pymol.finish_launching()    
+builder = Gtk.Builder()
+builder.add_from_file("vit.glade")
+builder.get_object('main').show_all()
+builder.connect_signals(Handler())
+
+
+class ThreadClass(threading.Thread):
+	def run(self):
+        	Gtk.main()
+		
+ThreadClass().start()
