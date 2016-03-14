@@ -1,0 +1,60 @@
+#!/bin/bash
+
+wget https://salilab.org/modeller/9.14/modeller_9.16-1_amd64.deb
+
+echo 'Modeller key is not provided and you may have to request one at https://salilab.org/modeller/registration.html'
+echo -n 'If you already have a license, please insert it now:'
+read modkey
+
+echo 'Installing modeller'
+sudo env KEY_MODELLER=$modkey dpkg -i modeller_9.14-1_amd64.deb && rm modeller_9.14-1_amd64.deb
+
+
+
+
+echo "ViTaMIn needs to install csh, biopython, matplotlib, pymol and fort77 from Ubuntu repository."
+echo -n "Do you want to install all above? [n/Y]"
+
+read ans 
+if [ $ans = ] || [ $ans = "Y" ] || [ $ans = "y" ]
+then 
+sudo apt-get install csh python-biopython python-matplotlib pymol fort77 -y
+fi
+
+mkdir $HOME/Vitamin
+
+mv procheck.tar.gz $HOME/Vitamin 
+ 
+mv Vitamin.tar.gz $HOME/Vitamin 
+
+cd $HOME/Vitamin
+tar -xvf Vitamin.tar.gz && rm Vitamin.tar.gz
+ 
+mv procheck.tar.gz src/
+cd src/
+tar -xvf procheck.tar.gz && rm procheck.tar.gz
+cd procheck
+ 
+chmod +x procomp.scr
+./procomp.scr
+
+if grep -Fq 'alias procheck' ~/.bashrc
+then
+echo 'Procheck already in bash. Skipping this step.'
+else
+echo "alias procheck='$HOME/Vitamin/src/procheck/procheck.scr'" >> ~/.bashrc
+echo "export prodir='$HOME/Vitamin/src/procheck'" >> ~/.bashrc
+fi
+ 
+cd $HOME/Vitamin
+bash
+
+
+
+
+
+
+
+
+
+
