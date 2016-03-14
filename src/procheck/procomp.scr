@@ -1,0 +1,23 @@
+#!/bin/csh -v -x
+f77 -o anglen anglen.f
+f77 -o clean clean.f
+f77 -o rmsdev rmsdev.f
+f77 -o secstr secstr.f
+f77 -c ps.f
+f77 -c gfac2pdb.f
+f77 -c tplot.f
+f77 -c pplot.f
+f77 -c bplot.f
+f77 -c mplot.f
+f77 -c vplot.f
+f77 -c viol2pdb.f
+f77 -c wirplot.f
+f77 -o gfac2pdb gfac2pdb.o ps.o
+f77 -o pplot pplot.o ps.o
+f77 -o bplot bplot.o ps.o
+f77 -o tplot tplot.o ps.o
+f77 -o mplot mplot.o ps.o
+f77 -o vplot vplot.o ps.o
+f77 -o viol2pdb viol2pdb.o ps.o
+f77 -o wirplot wirplot.o ps.o
+cc -o nb nb.c -lm

@@ -1,0 +1,53 @@
+#!/bin/csh
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#  gfac2pdb.scr
+#  ------------
+#  Shell script for running the gfac2pdb program which
+#  generates PDB files with the atomic B-factors representing
+#  the corresponding torsion-angle G-factors
+#
+#  Roman Laskowski, July 1996
+#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# Check that at least exactly parameter has been entered
+if ($#argv != 1) then
+  echo ' '
+  echo '*** ERROR. Correct usage is:'
+  echo ' '
+  echo '           gfac2pdb  filename'
+  echo ' '
+  echo 'where  filename  =  the coordinates file containing the'
+  echo '                    protein structure of interest'
+  echo ' '
+  echo 'For example:-'
+  echo ' '
+  echo '           gfac2pdb  /data/pdb/p1eca.pdb'
+  echo ' '
+else
+  echo ' '
+  echo ' '
+  echo 'gfac2pdb - Output of torsion-angle G-factors as atomic B-values'
+  echo '---------------------------------------------------------------'
+  echo ' '
+  set filename = $1
+  echo 'Coordinates file:   [' $filename ']'
+  echo ' '
+  echo 'Program directory:   ' $prodir
+  echo ' '
+#
+# If the PDB file exists, then run gfac2pdb
+#
+if (-e $filename) then
+    #-----------------#
+    # G F A C 2 P D B #
+    echo ' '
+    $prodir/gfac2pdb << EOD
+$1
+EOD
+    echo ' '
+    echo '.................................................................'
+else
+    echo 'File not found: '$filename
+endif
+endif

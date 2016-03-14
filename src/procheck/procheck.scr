@@ -1,0 +1,201 @@
+#!/bin/csh
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#  procheck.scr
+#  ------------
+#  Shell script for running stereochemical checking programs
+#  Roman Laskowski, August 1992
+#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# Check that exactly two parameters have been entered
+if ($#argv != 2 && $#argv != 3) then
+  echo ' '
+  echo '*** ERROR. Correct usage is:'
+  echo ' '
+  echo '              procheck  filename  [chain]  resolution'
+  echo ' '
+  echo ' '
+  echo '       where  filename    = the coordinates file in Brookhaven format'
+  echo '              [chain]     = an optional one-letter chain-ID'
+  echo '              resolution  = a real number giving the resolution'
+  echo '                            of the structure'
+  echo ' '
+  echo 'For example:-'
+  echo ' '
+  echo '              procheck  /data/pdb/p1amt.pdb  A  1.5'
+  echo ' '
+else
+  echo ' '
+  echo ' '
+  echo 'Check of stereochemical quality - PROCHECK v.3.5.4 (Feb 2001)'
+  echo '-------------------------------------------------------------'
+  echo ' '
+  set filename = $1
+  echo 'Coordinates file:   [' $filename ']'
+  echo ' '
+  if ($#argv == 2) then
+    set chain = ' '
+    set resolution = $2
+  else
+    set chain = $2
+    set resolution = $3
+    echo 'Chain:              [' $chain ']'
+    echo ' '
+  endif
+  echo 'Resolution:          ' $resolution
+  echo ' '
+  echo 'Program directory:   ' $prodir
+  echo ' '
+#
+# If the pdb file exists, then do the business
+#
+if (-e $filename) then
+    #-------------#
+    # C L E A N   #
+    #-------------#
+    echo 'CLEAN - Clean-up program' >! clean.log
+    echo '------------------------' >> clean.log
+    echo ' ' >> clean.log
+    echo 'Running clean-up on file: '$filename
+    echo ' '
+    if (-e resdefs.dat) then
+    else
+      cp $prodir/resdefs.data resdefs.dat
+    endif
+    $prodir/clean >> clean.log << EOD
+$filename
+EOD
+    grep "*" clean.log
+    echo ' '
+    echo '.................................................................'
+    #-------------#
+    # S E C S T R #
+    #-------------#
+    echo ' ' >! secstr.log
+    echo 'SECSTR - Secondary structure assignment' >> secstr.log
+    echo '---------------------------------------' >> secstr.log
+    echo ' ' >> secstr.log
+    echo ' '
+    echo 'Secondary structure assignment'
+    echo ' '
+    $prodir/secstr >> secstr.log << EOD
+$filename
+EOD
+    grep "*" secstr.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # N B         #
+    #-------------#
+    echo ' ' >! nb.log
+    echo 'Check of non-bonded contacts' >> nb.log
+    echo '----------------------------' >> nb.log
+    echo ' ' >> nb.log
+    echo ' '
+    echo 'Non-bonded interactions'
+    echo ' '
+    $prodir/nb >> nb.log << EOD
+$filename
+EOD
+    grep "*" nb.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # A N G L E N #
+    #-------------#
+    echo ' ' >! anglen.log
+    echo 'ANGLEN - Calculation of bond lengths and angles' >> anglen.log
+    echo '-----------------------------------------------' >> anglen.log
+    echo ' ' >> anglen.log
+    echo ' '
+    echo 'Calculation of bond lengths and bond angles'
+    echo ' '
+    $prodir/anglen >> anglen.log << EOD
+$filename
+EOD
+    grep "*" anglen.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # T P L O T   #
+    #-------------#
+    if (-e prodata) then
+    else
+      cp $prodir/procheck.dat prodata
+    endif
+    if (-e procheck.prm) then
+    else
+      cp $prodir/procheck.prm .
+    endif
+    echo ' ' >! tplot.log
+    echo 'Phi-psi and chi1-chi2 distributions' >> tplot.log
+    echo '-----------------------------------' >> tplot.log
+    echo ' ' >> tplot.log
+    echo ' '
+    echo 'Phi-psi and chi1-chi2 distributions'
+    echo ' '
+    $prodir/tplot >> tplot.log << EOD
+$filename
+$chain
+$resolution
+N
+
+EOD
+    echo ' '
+    grep "*" tplot.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # P P L O T   #
+    #-------------#
+    echo ' ' >! pplot.log
+    echo 'Plots and residue-by-residue listing' >> pplot.log
+    echo '------------------------------------' >> pplot.log
+    echo ' ' >> pplot.log
+    echo ' '
+    echo 'Stereochemical quality plots and residue-by-residue listing'
+    echo ' '
+    $prodir/pplot >> pplot.log << EOD
+$filename
+$chain
+$resolution
+EOD
+    echo ' '
+    grep "*" pplot.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # B P L O T   #
+    #-------------#
+    echo ' ' >! bplot.log
+    echo 'Main-chain bond-lengths and angles, and planar groups' >> bplot.log
+    echo '-----------------------------------------------------' >> bplot.log
+    echo ' ' >> bplot.log
+    echo ' '
+    echo 'Main-chain bond-lengths and angles, and planar groups'
+    echo ' '
+    $prodir/bplot >> bplot.log << EOD
+$filename
+$chain
+$resolution
+EOD
+    echo ' '
+    grep "*" bplot.log
+    echo ' '
+    echo '..................................................................'
+  #
+  # Tidy up at end
+  # --------------
+    if (-e prodata) then
+      \rm prodata
+    endif
+    if (-e resdefs.dat) then
+      \rm resdefs.dat
+    endif
+    if (-e ps.number) then
+      \rm ps.number
+    endif
+else
+    echo 'File not found: '$filename
+endif
+endif

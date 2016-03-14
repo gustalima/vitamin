@@ -1,0 +1,14 @@
+#
+mv manual_nmr.doc      man_nmr.doc
+mv procheck_comp.com   p_comp.com
+mv procheck_comp.prm   p_comp.prm
+mv procheck_comp.scr   p_comp.scr
+mv procheck_nmr.com    p_nmr.com
+mv procheck_nmr.prm    p_nmr.prm
+mv procheck_nmr.scr    p_nmr.scr
+mv proplot_comp.com    pp_comp.com
+mv proplot_comp.scr    pp_comp.scr
+mv proplot_nmr.com     pp_nmr.com
+mv proplot_nmr.scr     pp_nmr.scr
+mv prosub_comp.com     ps_comp.com
+mv prosub_nmr.com      ps_nmr.com

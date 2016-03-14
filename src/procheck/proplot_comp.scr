@@ -1,0 +1,120 @@
+#!/bin/csh
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#  proplot_comp.scr
+#  ----------------
+#  Shell script for plotting PROCHECK comparisons on aligned
+#  structures. Assumes all the data files have already been
+#  created using profuse.scr
+#  Roman Laskowski, November 1994
+#  Current version: PROCHECK v.3.5.4, Feb 2001
+#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# Check that exactly two parameters have been entered
+#if ($#argv != 1 && $#argv != 2) then
+if ($#argv != 1) then
+  echo ' '
+  echo '*** ERROR. Correct usage is:'
+  echo ' '
+#  echo '           proplot_comp  filelist  [alignment]'
+  echo '           proplot_comp  filelist'
+  echo ' '
+  echo ' '
+  echo '    where  filelist     = file containing list of structures'
+  echo '                          to be compared'
+#  echo '           [alignment]  = alignments file (optional) - not yet'
+#  echo '                          implemented'
+  echo ' '
+  echo 'For example:-'
+  echo ' '
+#  echo '           proplot_comp globins.list globins.align'
+  echo '           proplot_comp globins.list'
+  echo ' '
+else
+  echo ' '
+  echo ' '
+  echo 'PROPLOT_COMP. PROCHECK v.3.5.4 (Feb 2001)'
+  echo '-----------------------------------------'
+  echo ' '
+  set filelist = $1
+  echo 'Coordinates file:   [' $filelist ']'
+  echo ' '
+  if ($#argv == 1) then
+    set alignment = ' '
+    echo ' '
+#    echo '* No alignment file supplied. Comparison will be based on residue numbers'
+    echo ' '
+  else
+    set alignment = $2
+    echo 'Alignment file:    [' $alignment ']'
+    echo ' '
+  endif
+  echo ' '
+  echo 'Program directory:   ' $prodir
+  echo ' '
+  set ensemb_name = '%'$filelist
+#
+# If the file-list exists, then do the business
+#
+if (-e $filelist) then
+
+    #-------------#
+    # T P L O T   #
+    #-------------#
+    if (-e prodata) then
+    else
+      cp $prodir/procheck.dat prodata
+    endif
+    if (-e procheck_comp.prm) then
+    else
+      cp $prodir/procheck_comp.prm .
+    endif
+    echo ' ' >! tplot.log
+    echo 'Phi-psi and chi1-chi2 distributions' >> tplot.log
+    echo '-----------------------------------' >> tplot.log
+    echo ' ' >> tplot.log
+    echo ' '
+    echo 'Phi-psi and chi1-chi2 distributions'
+    echo ' '
+    $prodir/tplot >> tplot.log << EOD
+$ensemb_name
+
+0.0
+Y
+EOD
+    echo ' '
+    grep "*" tplot.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # M P L O T   #
+    #-------------#
+    echo ' ' >! mplot.log
+    echo 'Dihedral angle distribution plots and quality plots' >> mplot.log
+    echo '---------------------------------------------------' >> mplot.log
+    echo ' ' >> mplot.log
+    echo ' '
+    echo 'Dihedral angle distributions and quality plots'
+    echo ' '
+    $prodir/mplot >> mplot.log << EOD
+$ensemb_name
+
+
+EOD
+    echo ' '
+    grep "*" mplot.log
+    echo ' '
+    echo '..................................................................'
+  #
+  # Tidy up at end
+  # --------------
+    if (-e prodata) then
+      \rm prodata
+    endif
+else
+    echo 'File not found: '$filelist
+endif
+endif
+
+exit(0)
+

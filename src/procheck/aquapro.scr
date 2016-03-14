@@ -1,0 +1,215 @@
+#!/bin/csh
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#  aquapro.scr
+#  -----------
+#  Shell script for running both AQUA and the PROCHECK-NMR
+#  plotting programs on an NMR ensemble of structures.
+#
+#  Modifed from original procheck_nmr.scr - Apr 1996
+#
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#
+# Check that exactly two parameters have been entered
+if ($#argv != 1 && $#argv != 2) then
+  echo ' '
+  echo '*** ERROR. Correct usage is:'
+  echo ' '
+  echo '           procheck_nmr  filename  [ranges-file]'
+  echo ' '
+  echo ' '
+  echo '    where  filename      = the coordinates file in Brookhaven format'
+  echo '           [ranges-file] = name of (optional) file defining which'
+  echo '                           models and residue ranges are to be'
+  echo '                           included/excluded from the analyses'
+  echo ' '
+  echo 'For example:-'
+  echo ' '
+  echo '           procheck_nmr /data/pdb/p2hir.pdb 2hir.ranges'
+  echo ' '
+else
+  echo ' '
+  echo ' '
+  echo 'AQUA & PROCHECK-NMR.'
+  echo '--------------------'
+  echo ' '
+  set filename = $1
+  echo 'Coordinates file:   [' $filename ']'
+  echo ' '
+  if ($#argv == 1) then
+    set ranges = ' '
+    echo ' '
+    echo '* No ranges file supplied - all models and residues will be included'
+    echo ' '
+  else
+    set ranges = $2
+  echo 'Ranges file:    [' $ranges ']'
+  echo ' '
+  endif
+  echo ' '
+  echo 'Program directory:   ' $prodir
+  echo ' '
+  set nmr_name = '@'$filename
+#
+# If the pdb file exists, then do the business
+#
+if (-e $filename) then
+
+    #-------------#
+    # A Q U A     #
+    #-------------#
+    echo ' '
+    echo 'AQUA - Restraint violations' >! aqua.log
+    echo '---------------------------' >> aqua.log
+    echo ' ' >> aqua.log
+    echo 'Starting AQUA from root directory:   ' $aquaroot
+    echo ' '
+    set restrprefix = `$aquaroot/bin/getproj $filename`
+    if ( ! -e $restrprefix.noe && ! -e $restrprefix.hb && ! -e $restrprefix.ss ) then
+	echo '** No AQUA distance restraint files ' $restrprefix'.? found' >> aqua.log
+        goto aquaend
+    endif
+    echo ' '
+    echo 'Calculating restraint violations from AQUA restraint file(s)' $restrprefix'.?'
+    echo ' '
+    $aquaroot/scripts/aqpc -r $restrprefix $filename >> aqua.log
+    set errstatus = $status
+    if ( $errstatus ) goto aquaerr
+aquaend:
+    grep '^ *\*' aqua.log
+    echo ' '
+    echo '.................................................................'
+endif
+
+    #-------------#
+    # C L E A N   #
+    #-------------#
+    echo 'CLEAN - Clean-up program' >! clean.log
+    echo '------------------------' >> clean.log
+    echo ' ' >> clean.log
+    echo 'Running clean-up on file: '$filename
+    echo ' '
+    $prodir/clean >> clean.log << EOD
+$nmr_name
+EOD
+    grep "*" clean.log
+    echo ' '
+    echo '.................................................................'
+    #-------------#
+    # S E C S T R #
+    #-------------#
+    echo ' ' >! secstr.log
+    echo 'SECSTR - Secondary structure assignment' >> secstr.log
+    echo '---------------------------------------' >> secstr.log
+    echo ' ' >> secstr.log
+    echo ' '
+    echo 'Secondary structure assignment'
+    echo ' '
+    $prodir/secstr >> secstr.log << EOD
+$nmr_name
+EOD
+    grep "*" secstr.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # R M S D E V #
+    #-------------#
+    echo ' ' >! rmsdev.log
+    echo 'RMSDEV - RMS deviations for ensemble' >> rmsdev.log
+    echo '------------------------------------' >> rmsdev.log
+    echo ' ' >> rmsdev.log
+    echo ' '
+    echo 'RMS deviations for ensemble'
+    echo ' '
+    $prodir/rmsdev >> rmsdev.log << EOD
+$filename
+EOD
+    grep "*" rmsdev.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # T P L O T   #
+    #-------------#
+    if (-e prodata) then
+    else
+      cp $prodir/procheck.dat prodata
+    endif
+    if (-e procheck_nmr.prm) then
+    else
+      cp $prodir/procheck_nmr.prm .
+    endif
+    echo ' ' >! tplot.log
+    echo 'Phi-psi and chi1-chi2 distributions' >> tplot.log
+    echo '-----------------------------------' >> tplot.log
+    echo ' ' >> tplot.log
+    echo ' '
+    echo 'Phi-psi and chi1-chi2 distributions'
+    echo ' '
+    $prodir/tplot >> tplot.log << EOD
+$filename
+
+0.0
+Y
+$ranges
+EOD
+    echo ' '
+    grep "*" tplot.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # M P L O T   #
+    #-------------#
+    echo ' ' >! mplot.log
+    echo 'Dihedral angle distribution plots and quality plots' >> mplot.log
+    echo '---------------------------------------------------' >> mplot.log
+    echo ' ' >> mplot.log
+    echo ' '
+    echo 'Dihedral angle distributions and quality plots'
+    echo ' '
+    $prodir/mplot >> mplot.log << EOD
+$filename
+
+$ranges
+EOD
+    echo ' '
+    grep "*" mplot.log
+    echo ' '
+    echo '..................................................................'
+    #-------------#
+    # V P L O T   #
+    #-------------#
+    echo ' ' >! vplot.log
+    echo 'Restraints and restraint violation plots' >> vplot.log
+    echo '----------------------------------------' >> vplot.log
+    echo ' ' >> vplot.log
+    echo ' '
+    echo 'Dihedral angle distributions and quality plots'
+    echo ' '
+    $prodir/vplot >> vplot.log << EOD
+$filename
+
+$ranges
+EOD
+    echo ' '
+    grep "*" vplot.log
+    echo ' '
+    echo '..................................................................'
+  #
+  # Tidy up at end
+  # --------------
+    if (-e prodata) then
+      \rm prodata
+    endif
+else
+    echo 'File not found: '$filename
+endif
+endif
+
+exit(0)
+
+aquaerr:
+grep '^ *\*' aqua.log
+echo ' '
+echo '*** AQUA error, status '$errstatus'. Shell-script aborted'
+echo ' '
+exit(1)
+
