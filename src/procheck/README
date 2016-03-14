@@ -1,0 +1,201 @@
+
+
+PROCHECK v.3.5.4, incorporating PROCHECK-NMR and PROCHECK-COMP
+------------------------------------------------------------
+
+Introduction
+------------
+
+PROCHECK consists of 3 main components: the original PROCHECK programs for
+assessing the overall geometrical quality of protein structures, the
+extensions for analysing NMR ensembles (PROCHECK-NMR), and the version for
+comparing related protein structures (PROCHECK-COMP, or PROCOMP).
+
+PROCHECK itself is intended as a tool for highlighting regions of a
+protein structure where the geometry is unusual and hence which may need
+closer examination.
+
+PROCHECK-NMR is an extension for ensembles of NMR structures (where all
+models are in a single PDB file, delimited by MODEL and ENDMDL records).
+As well as analysing the geometry of the structures in the ensemble, the
+programs also produce analyses of the NMR restraint violations. The
+violations are calculated by a program called AQUA, written by Ton Rullmann
+of Utrecht University. AQUA requires the restraints be supplied in a
+standard file format, but also has scripts for converting DISGEO, X-PLOR,
+etc restraint files into this format. AQUA produces detailed listing of all
+its analyses.
+
+PROCHECK-COMP is for comparing the residue-by-residue geometry of a set of
+closely-related structures, such as separate members of a family, or models
+of the same structure saved during different stages of refinement. It
+outputs a number of PostScript files showing the comparisons, including
+residue-by-residue Ramachandran plots and comparison of the different
+secondary structure elements in each PDB file.
+
+
+THE SOURCE CODE
+---------------
+
+The latest versions (v.3.5.4) of the PROCHECK programs are in two
+directories, available via anonymous ftp on 128.40.46.11, as follows:-
+
+pub/procheck/tar3_5
+-------------------
+This contains the following compressed tar files:-
+
+    procheck.tar.Z   - The source code for PROCHECK v.3.5.3 (which includes
+                       PROCHECK-NMR and PROCHECK-COMP).
+
+    manual.tar.Z     - Operating Instructions for PROCHECK, in HTML format.
+
+    aqua.tar.Z       - The source code for AQUA.
+
+    nmr_manual.tar.Z - Operating Instructions for AQUA and PROCHECK-NMR,
+                       in HTML format.
+
+For unix systems, transfer these four files across to your machine and then
+uncompress and untar them.
+
+pub/procheck/source3_5
+----------------------
+This contains all the individual PROCHECK source files, script files,
+command files, and documentation files (excluding the AQUA programs and the
+AQUA and HTML-format documentation). If yours is a VAX/VMS system, you
+will need to transfer all these files using "mget". Remember to change the
+transfer mode from BINARY to ASCII.
+
+
+
+CONFIDENTIALITY AGREEMENT
+-------------------------
+
+Before using the programs you must first sign a Confidentiality Agreement.
+This is in a file called confid.doc which you will find both in the
+pub/procheck/ directory and in amongst the source files when you uncompress
+procheck.tar.Z. If you are a new PROCHECK user and have not already
+returned this document, please print it off (Note: it is an ASCII text
+file), fill in the details, sign it and send it to the address given at the
+bottom.
+
+
+
+
+INSTALLATION INSTRUCTIONS
+-------------------------
+
+The PROCHECK installation instructions are in a file called
+maninst.ps. This is a PostScript file, so send it to a PostScript printer
+and follow the instructions carefully before doing anything else.
+
+The AQUA programs are in the compressed tar file called aqua.tar.Z which
+contains all the source code, script files and documentation. When you have
+uncompressed and untarred the file, read the README file for installation
+instructions.
+
+Note that, the AQUA scripts that run the programs are currently available
+for unix machines only.
+
+
+OPERATING INSTRUCTIONS
+----------------------
+
+1. PROCHECK
+   --------
+   The operating instructions for PROCHECK are in a set of HTML format
+   files in manual.tar.Z. Create a directory for the documentation and
+   uncompress and untar this file. Then use Netscape or Mosaic to view the
+   documentation by calling up the contents page index.html.
+
+   For example, with Netscape, type
+
+             netscape index.html &
+
+
+2. AQUA and PROCHECK-NMR
+   ---------------------
+   The operating instructions for AQUA and PROCHECK-NMR are in a set of
+   HTML format files in nmr_manual.tar.Z. Create a directory for
+   the documentation and uncompress and untar this file. Note that the
+   directory should be separate from that where the PROCHECK documentation
+   (above) is stored, as many of the files have the same file-names in the
+   two sets of documentation.
+
+   Use Netscape or Mosaic to view the documentation by calling up the
+   contents page index.html.
+
+   For example, with Netscape, type
+
+             netscape index.html &
+
+   IMPORTANT. For existing users, please note that the method of running
+              the new PROCHECK-NMR programs has altered slightly in that
+              the name of the restraints file is no longer required as the
+              second parameter (which is now used for the ranges file
+              instead - see Operating Instructions).
+
+3. PROCHECK-COMP
+   -------------
+   There is no documentation for PROCHECK-COMP at present, but the program
+   will be further developed (and proper documentation produced) later in
+   1997.
+
+   To run, enter:
+
+                    procheck_comp  filelist
+
+       where   filelist   =   file containing the list of structures
+                              to be compared
+
+   For example:-
+                    procheck_comp  globins.list
+
+   At present, this program assumes that the residue-numbering between the
+   PDB files to be compared corresponds to equivalent residues (though
+   allowance is made for insertions and deletions). The program also
+   assumes that the structures have already been fitted and superposed on
+   the equivalent residues. Future versions will allow an alignment between
+   the structures to be supplied so that equivalent residue-numbering will
+   no longer be a requirement, and will also perform the fitting.
+
+4. GFAC2PDB
+   --------
+   A new program called gfac2pdb is supplied with the latest version of the
+   PROCHECK programs. This can be run to generate a PDB file of your
+   protein structure with all torsion-angle G-factors converted into
+   B-values (scaled from 0.0 to 80.0). The new PDB file (called
+   <filename>_gfact.pdb, where <filename> is the original rootname of your
+   coordinates file) can be viewed using any molecular modelling package
+   with the atoms coloured according to B-factor. The high B-value regions
+   will then highlight the regions with unusual G-factor scores.
+
+   See section 6 of the PROCHECK Operating Manual for further details.
+
+
+
+
+IMPORTANT NOTE for existing PROCHECK and PROCHECK-NMR users
+-----------------------------------------------------------
+If you have been using a version of the programs earlier than v.3.3 you
+will find that the current version of PROCHECK has a number of extensions
+in the parameter files (procheck.prm and procheck_nmr.prm). If you run
+either PROCHECK and PROCHECK-NMR in a directory which contains an old
+version of one of these parameter files you may get an error message about
+the version numbers being incompatible. In this case, just delete your old
+parameter file before running the program again. A new version of the file
+will be created in its place.
+
+
+
+
+If you have any problems either installing or using the software, please
+write to me at the following e-mail address:-
+
+      roman@ebi.ac.uk
+
+Questions about AQUA should be directed to Jurgen F. Doreleijers at
+
+      jurgen@yola.bmrb.wisc.edu
+
+
+
+Roman Laskowski.

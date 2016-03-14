@@ -1,0 +1,120 @@
+#!/bin/csh
+#########################################################################
+#
+# wirplot.scr - Shell script for generating wire plots
+#
+#               Alias as wirplot
+#
+#               To run, enter:   wirplot  filename  [chain]
+#
+#               where filename is the name of the PDB file to be plotted
+#               and [chain] is the optional chain identifier.
+#
+#########################################################################
+
+#
+# Initial set-up
+#
+#setenv prodir       '/usr/local/bsm/apps/procheck'
+#setenv progdir      '/home/bsm2/roman/SOLLY/generate/pdbsum'
+
+#
+# Check that filename has been entered
+if ($#argv != 1 && $#argv != 2) then
+  echo ' '
+  echo '*** ERROR. Correct usage is:'
+  echo ' '
+  echo '              wirplot  filename  [chain]'
+  echo ' '
+  echo ' '
+  echo '       where  filename    = the coordinates file in PDB format'
+  echo '              [chain]     = optional chain identifier. If omitted'
+  echo '                            then all chains will be plotted'
+  echo ' '
+  echo 'For example:-'
+  echo ' '
+  echo '              wirplot  /data/pdb/p1amt.pdb'
+  echo '              wirplot  /data/pdb/p7hvp.pdb  A'
+  echo ' '
+else
+  echo ' '
+  echo ' '
+  echo 'Running WIRPLOT ...'
+  echo '-------------------'
+  echo ' '
+  set filename = $1
+  echo 'Coordinates file:   [' $filename ']'
+  if ($#argv == 2) then
+    set chain = $2
+  else
+    set chain = ' '
+  endif
+  echo ' '
+  #
+  # If the pdb file exists, then do the business
+  #
+  if (-e $filename) then
+      #-------------#
+      # C L E A N   #
+      #-------------#
+      echo 'CLEAN - Clean-up program' >! clean.log
+      echo '------------------------' >> clean.log
+      echo ' ' >> clean.log
+      echo '   Running clean-up ...'
+      echo ' '
+      if (-e resdefs.dat) then
+      else
+        cp $prodir/resdefs.dat resdefs.dat
+      endif
+      $prodir/clean >> clean.log << EOD
+$filename
+EOD
+      grep "*" clean.log
+      echo ' '
+      echo '.................................................................'
+      #-------------#
+      # S E C S T R #
+      #-------------#
+      echo ' ' >! secstr.log
+      echo 'SECSTR - Secondary structure assignment' >> secstr.log
+      echo '---------------------------------------' >> secstr.log
+      echo ' ' >> secstr.log
+      echo ' '
+      echo '   Secondary structure assignment ...'
+      echo ' '
+      $prodir/secstr >> secstr.log << EOD
+$filename
+EOD
+      grep "*" secstr.log
+      echo ' '
+      echo '..................................................................'
+      #---------------#
+      # W I R P L O T #
+      #---------------#
+      echo ' ' >! wirplot.log
+      echo 'Wireplot' >> wirplot.log
+      echo '--------' >> wirplot.log
+      echo ' ' >> wirplot.log
+      echo ' '
+      echo '   Writing PostScript file ...'
+      echo ' '
+      $prodir/wirplot >> wirplot.log << EOD
+$filename
+$chain
+Y
+EOD
+      grep "*" wirplot.log
+      echo ' '
+
+      #
+      #-- Remove the resdefs file
+      #
+      if (-e resdefs.dat) then
+        \rm resdefs.dat
+      endif
+
+  else
+      echo 'File not found: '$filename
+  endif
+endif
+
