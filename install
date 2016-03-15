@@ -15,26 +15,26 @@ sudo env KEY_MODELLER=$modkey dpkg -i modeller_9.14-1_amd64.deb && rm modeller_9
 echo "ViTaMIn needs to install csh, biopython, matplotlib, pymol and fort77 from Ubuntu repository."
 echo -n "Do you want to install all above? [n/Y]"
 
-read ans 
+read ans
 if [ $ans = ] || [ $ans = "Y" ] || [ $ans = "y" ]
-then 
+then
 sudo apt-get install csh python-biopython python-matplotlib pymol fort77 -y
 fi
 
 mkdir $HOME/Vitamin
 
-mv procheck.tar.gz $HOME/Vitamin 
- 
-mv Vitamin.tar.gz $HOME/Vitamin 
+mv procheck.tar.gz $HOME/Vitamin
+
+mv Vitamin.tar.gz $HOME/Vitamin
 
 cd $HOME/Vitamin
 tar -xvf Vitamin.tar.gz && rm Vitamin.tar.gz
- 
+
 mv procheck.tar.gz src/
 cd src/
 tar -xvf procheck.tar.gz && rm procheck.tar.gz
 cd procheck
- 
+
 chmod +x procomp.scr
 ./procomp.scr
 
@@ -42,19 +42,11 @@ if grep -Fq 'alias procheck' ~/.bashrc
 then
 echo 'Procheck already in bash. Skipping this step.'
 else
-echo "alias procheck='$HOME/Vitamin/src/procheck/procheck.scr'" >> ~/.bashrc
-echo "export prodir='$HOME/Vitamin/src/procheck'" >> ~/.bashrc
+echo "export VITAMIN_HOME='$HOME/Vitamin/'" >> ~/.bashrc
+echo "alias procheck='$VITAMIN_HOME/src/procheck/procheck.scr'" >> ~/.bashrc
+echo "export prodir='$VITAMIN_HOME/src/procheck'" >> ~/.bashrc
 fi
- 
+
+
 cd $HOME/Vitamin
 bash
-
-
-
-
-
-
-
-
-
-
