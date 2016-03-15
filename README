@@ -70,9 +70,15 @@ compiler. You can choose not to install procheck, if you already have a working
 version with the 'procheck' alias.
 
 For Installion, use the command in download folder:
+Easy way:
+open terminal (install git if you don't have it already)
+git clone http://github.com/gustalima/vitamin-stable
+cd vitamin-stable
+./install
 
-tar -xvf vitamin_installer.tar.gz
-cd vitamin_installer
+Without git:
+Download Vitamin.tar.gz and procheck.tar.gz and install 
+run the install file with the following command
 ./install
 
 
