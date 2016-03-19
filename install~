@@ -20,7 +20,7 @@ sudo apt-get install csh python-biopython python-gobject python-gi-cairo python-
 
 mkdir $HOME/Vitamin
 
-
+mv procheck.tar.gz $HOME/Vitamin
 
 mv Vitamin.tar.gz $HOME/Vitamin
 
@@ -29,6 +29,7 @@ tar -xvf Vitamin.tar.gz && rm Vitamin.tar.gz
 
 mv procheck.tar.gz src/
 cd src/
+tar -xvf procheck.tar.gz && rm procheck.tar.gz
 cd procheck
 
 chmod +x procomp.scr
