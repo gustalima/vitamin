@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Vitamin - Modeller GUI : GUI for Modeller, a protein modeling software">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Vitamin - Modeller GUI</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/gustalima/vitamin">View on GitHub</a>
+
+          <h1 id="project_title">Vitamin - Modeller GUI</h1>
+          <h2 id="project_tagline">GUI for Modeller, a protein modeling software</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/gustalima/vitamin/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/gustalima/vitamin/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>
+<a id="vitamin---visual-table-modeller-interface-version-10-12082014" class="anchor" href="#vitamin---visual-table-modeller-interface-version-10-12082014" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ViTaMIn - Visual Table Modeller Interface Version 1.0 12/08/2014</h2>
+
+<p>This program comes with ABSOLUTELY NO WARRANTY;
+for details, visit <a href="http://www.gnu.org/licenses/lgpl.html">http://www.gnu.org/licenses/lgpl.html</a></p>
+
+<h2>
+<a id="general-usage-notes" class="anchor" href="#general-usage-notes" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>GENERAL USAGE NOTES</h2>
+
+<ul>
+<li><p>This software combines several tools for protein modeling, such as BLAST 
+search for templates, Modeller, procheck and PyMOL. All the process, from 
+searching templates to model evaluation and refining can be done in the ViTaMIn.</p></li>
+<li><p>You WILL need a valid Modeller license (free for academics, 
+<a href="https://salilab.org/modeller/registration.html">https://salilab.org/modeller/registration.html</a>). ViTaMIn installer will not 
+install Modeller, but you can find Installation Notes for it on official website
+.</p></li>
+<li><p>You can use the software, redistribute and make any changes in the code, as 
+long as you keep original credits. For redistribuition, please consider giving 
+the official link (in which you may have download this file, I hope =D). This 
+way I can keep record of the number of downloads and see if my software is 
+working as I planned (don't worry, no confidential records neither user ID is
+recorded, it is a download counter only). </p></li>
+<li><p>Please consider feedback. This is the only way to track bugs and make improves
+.</p></li>
+</ul>
+
+<hr>
+
+<p>Installing ViTaMIn under Linux</p>
+
+<hr>
+
+<h2>
+<a id="dependecies" class="anchor" href="#dependecies" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Dependecies</h2>
+
+<p>ViTaMIn depends on the following packages:</p>
+
+<ul>
+<li>Modeller (9.9 or newer)</li>
+<li>pymol (0.99 or newer, 1.3+ recommended)</li>
+<li>procheck </li>
+<li>matplotlib (1.2 or newer)</li>
+<li>biopython (1.6 or newer)</li>
+<li>GTK3+</li>
+<li>python (2.7.x) </li>
+</ul>
+
+<h2>
+<a id="system-requirements" class="anchor" href="#system-requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>System Requirements</h2>
+
+<p>The major job is done by Modeller, and as is, it needs a i686 or amd64 processor
+to work. The faster your processor, the faster your job is done. There is no 
+minimum requirements. Internet connection is required for BLAST search engine 
+only, but you can use it without one if you have sequences and pdbs on your disk
+.</p>
+
+<h2>
+<a id="ubuntu-1204-or-newer-" class="anchor" href="#ubuntu-1204-or-newer-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Ubuntu 12.04 or newer </h2>
+
+<p>Installing ViTaMIn in Ubuntu is a straight process using the provided script 
+(install). The script checks and install dependencies automatically (may require
+root permission) and set procheck on your machine. Note that the procheck 
+version is the most update to date provided by Roman Laskowski, with a simple 
+change in the gets function (to fgets) in order to use newer versions of the cc
+compiler. You can choose not to install procheck, if you already have a working
+version with the 'procheck' alias.</p>
+
+<p>For Installion, use the command in download folder:
+Easy way:
+open terminal (install git if you don't have it already)
+git clone <a href="http://github.com/gustalima/vitamin-stable">http://github.com/gustalima/vitamin-stable</a>
+cd vitamin-stable
+./install</p>
+
+<p>Without git:
+Download Vitamin.tar.gz and procheck.tar.gz and install 
+run the install file with the following command
+./install</p>
+
+<h2>
+<a id="other-distros" class="anchor" href="#other-distros" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Other distros</h2>
+
+<p>For all other distros, you will need to get dependencies by yourself. It's not
+that hard, and most distros have them in their repositories. Once your system
+dependencies are OK, untar the tarball file provided in any folder and run from 
+terminal. Any missing dependencies you may have will be alerted in your terminal
+.</p>
+
+<p>LICENSE</p>
+
+<hr>
+
+<p>GNU LESSER GENERAL PUBLIC LICENSE</p>
+
+<p>Version 3, 29 June 2007</p>
+
+<p>Copyright © 2007 Free Software Foundation, Inc. <a href="http://fsf.org/">http://fsf.org/</a></p>
+
+<p>Everyone is permitted to copy and distribute verbatim copies of this license 
+document, but changing it is not allowed.</p>
+
+<p>This version of the GNU Lesser General Public License incorporates the terms 
+and conditions of version 3 of the GNU General Public License, supplemented by 
+the additional permissions listed below.</p>
+
+<ol>
+<li>Additional Definitions.
+As used herein, “this License” refers to version 3 of the GNU Lesser General 
+Public License, and the “GNU GPL” refers to version 3 of the GNU General Public
+License.</li>
+</ol>
+
+<p>“The Library” refers to a covered work governed by this License, other than an 
+Application or a Combined Work as defined below.</p>
+
+<p>An “Application” is any work that makes use of an interface provided by the 
+Library, but which is not otherwise based on the Library. Defining a subclass 
+of a class defined by the Library is deemed a mode of using an interface 
+provided by the Library.</p>
+
+<p>A “Combined Work” is a work produced by combining or linking an Application with
+the Library. The particular version of the Library with which the Combined Work
+was made is also called the “Linked Version”.</p>
+
+<p>The “Minimal Corresponding Source” for a Combined Work means the Corresponding 
+Source for the Combined Work, excluding any source code for portions of the 
+Combined Work that, considered in isolation, are based on the Application, 
+and not on the Linked Version.</p>
+
+<p>The “Corresponding Application Code” for a Combined Work means the object code
+and/or source code for the Application, including any data and utility programs
+needed for reproducing the Combined Work from the Application, but excluding the
+System Libraries of the Combined Work.</p>
+
+<ol>
+<li><p>Exception to Section 3 of the GNU GPL.
+You may convey a covered work under sections 3 and 4 of this License without 
+being bound by section 3 of the GNU GPL.</p></li>
+<li><p>Conveying Modified Versions.
+If you modify a copy of the Library, and, in your modifications, a facility 
+refers to a function or data to be supplied by an Application that uses the 
+facility (other than as an argument passed when the facility is invoked), then 
+you may convey a copy of the modified version:</p></li>
+</ol>
+
+<p>a) under this License, provided that you make a good faith effort to ensure 
+that, in the event an Application does not supply the function or data, the 
+facility still operates, and performs whatever part of its purpose remains 
+meaningful, or
+b) under the GNU GPL, with none of the additional permissions of this License 
+applicable to that copy.
+3. Object Code Incorporating Material from Library Header Files.
+The object code form of an Application may incorporate material from a header 
+file that is part of the Library. You may convey such object code under terms of
+your choice, provided that, if the incorporated material is not limited to 
+numerical parameters, data structure layouts and accessors, or small macros, 
+inline functions and templates (ten or fewer lines in length), you do both of 
+the following:</p>
+
+<p>a) Give prominent notice with each copy of the object code that the Library is 
+used in it and that the Library and its use are covered by this License.
+b) Accompany the object code with a copy of the GNU GPL and this license 
+document.
+4. Combined Works.
+You may convey a Combined Work under terms of your choice that, taken together, 
+effectively do not restrict modification of the portions of the Library 
+contained in the Combined Work and reverse engineering for debugging such 
+modifications, if you also do each of the following:</p>
+
+<p>a) Give prominent notice with each copy of the Combined Work that the Library is
+used in it and that the Library and its use are covered by this License.
+b) Accompany the Combined Work with a copy of the GNU GPL and this license 
+document.
+c) For a Combined Work that displays copyright notices during execution, include
+the copyright notice for the Library among these notices, as well as a reference
+directing the user to the copies of the GNU GPL and this license document.
+d) Do one of the following:
+0) Convey the Minimal Corresponding Source under the terms of this License, and 
+the Corresponding Application Code in a form suitable for, and under terms that 
+permit, the user to recombine or relink the Application with a modified version 
+of the Linked Version to produce a modified Combined Work, in the manner 
+specified by section 6 of the GNU GPL for conveying Corresponding Source.
+1) Use a suitable shared library mechanism for linking with the Library. A 
+suitable mechanism is one that (a) uses at run time a copy of the Library 
+already present on the user's computer system, and (b) will operate properly 
+with a modified version of the Library that is interface-compatible with the 
+Linked Version.
+e) Provide Installation Information, but only if you would otherwise be required
+to provide such information under section 6 of the GNU GPL, and only to the 
+extent that such information is necessary to install and execute a modified 
+version of the Combined Work produced by recombining or relinking the 
+Application with a modified version of the Linked Version. (If you use option 
+4d0, the Installation Information must accompany the Minimal Corresponding 
+Source and Corresponding Application Code. If you use option 4d1, you must 
+provide the Installation Information in the manner specified by section 6 of the
+GNU GPL for conveying Corresponding Source.)
+5. Combined Libraries.
+You may place library facilities that are a work based on the Library side by 
+side in a single library together with other library facilities that are not 
+Applications and are not covered by this License, and convey such a combined 
+library under terms of your choice, if you do both of the following:</p>
+
+<p>a) Accompany the combined library with a copy of the same work based on the 
+Library, uncombined with any other library facilities, conveyed under the terms 
+of this License.
+b) Give prominent notice with the combined library that part of it is a work 
+based on the Library, and explaining where to find the accompanying uncombined 
+form of the same work.
+6. Revised Versions of the GNU Lesser General Public License.
+The Free Software Foundation may publish revised and/or new versions of the GNU 
+Lesser General Public License from time to time. Such new versions will be 
+similar in spirit to the present version, but may differ in detail to address 
+new problems or concerns.</p>
+
+<p>Each version is given a distinguishing version number. If the Library as you 
+received it specifies that a certain numbered version of the GNU Lesser General 
+Public License “or any later version” applies to it, you have the option of 
+following the terms and conditions either of that published version or of any 
+later version published by the Free Software Foundation. If the Library as you 
+received it does not specify a version number of the GNU Lesser General Public 
+License, you may choose any version of the GNU Lesser General Public License 
+ever published by the Free Software Foundation.</p>
+
+<p>If the Library as you received it specifies that a proxy can decide whether 
+future versions of the GNU Lesser General Public License shall apply, that 
+proxy's public statement of acceptance of any version is permanent authorization
+for you to choose that version for the Library.</p>
+
+<hr>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Vitamin - Modeller GUI maintained by <a href="https://github.com/gustalima">gustalima</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
