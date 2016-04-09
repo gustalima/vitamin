@@ -23,16 +23,19 @@ mkdir $HOME/Vitamin
 
 
 mv Vitamin.tar.gz $HOME/Vitamin
+mv README $HOME/Vitamin/.src/README
 
 cd $HOME/Vitamin
 tar -xvf Vitamin.tar.gz && rm Vitamin.tar.gz
 
-mv procheck.tar.gz src/
-cd src/
+
+cd .src/
 cd procheck
 
 chmod +x procomp.scr
 ./procomp.scr
+
+mv $HOME/Vitamin/vitamin.desktop $HOME/.local/share/applications/
 
 if grep -Fq 'alias procheck' ~/.bashrc
 then
@@ -44,5 +47,5 @@ echo "export prodir='$HOME/Vitamin/src/procheck'" >> ~/.bashrc
 fi
 
 
-cd $HOME/Vitamin
+
 bash
