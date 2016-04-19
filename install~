@@ -52,5 +52,5 @@ fi
 
 
 bash
-rm -r $DIR
+rm $DIR
 cd
