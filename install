@@ -44,6 +44,7 @@ if grep -Fq 'alias procheck' ~/.bashrc
 then
 echo 'Procheck already in bash. Skipping this step.'
 else
+echo "" >> ~/.bashrc
 echo "export VITAMIN_HOME='$HOME/Vitamin/'" >> ~/.bashrc
 echo "alias procheck='$HOME/Vitamin/.src/procheck/procheck.scr'" >> ~/.bashrc
 echo "export prodir='$HOME/Vitamin/.src/procheck'" >> ~/.bashrc
